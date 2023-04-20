@@ -1,0 +1,8 @@
+# Postgres DB
+DB = dict(
+    port=5432,
+    host="",
+    user="",
+    password="",
+    dbname=""
+)
