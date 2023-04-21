@@ -1,27 +1,29 @@
 output_file = 'Astara Move - Materials'
 
 query = """
-select s.cif, vc.make, vc.model, vc."version" 
-from suppliers s, vehicles v, vehicle_classifications vc 
-where s.id = v.supplier_id and vc.id = v.vehicle_classification_id
-; 
+  select distinct s.cif, TRIM(vc.model) as model, vc.make --, vc."version"
+  from suppliers s, vehicles v, vehicle_classifications vc 
+  where s.id = v.supplier_id and vc.id = v.vehicle_classification_id
+  ;
 """
 
 mock_query_response = dict(
-  cif='',make='',model='',version=''
+  cif='',make='',model=''
 )
 
 def serialized_data(elm = mock_query_response):
+  rm_chars = lambda str: ''.join([char for char in str if char not in [" ", ".", "-", "_", "(", ")"]])
+
   return {
     # ok - FLET
     'company_code':'FLET',
 
     # ok - MAKEMODEL
-    'comercial_model' : elm['make'].upper().replace(" ", "") + elm['model'].upper().replace(" ", ""),
+    'comercial_model' : rm_chars(elm['model'].upper())[:18],
 
     # ok - Z
     'type':'Z',
-
+ 
     # ok - VEHI
     'tipo_de_material':'VEHI',
 
@@ -35,7 +37,7 @@ def serialized_data(elm = mock_query_response):
     'distribution_channel':None,
 
     # ok - MAKE MODEL VERSION
-    'description' : elm['make'] + ' ' + elm['model'] + ' ' + elm['version'] if (elm['make'] and elm['model'] and elm['version']) else elm['make'] + ' ' + elm['model'],
+    'description' : elm['make'] + ' ' + elm['model'],
 
     # ok - UN
     'measure_unit':'UN',
