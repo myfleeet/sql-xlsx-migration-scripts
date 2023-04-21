@@ -1,17 +1,26 @@
 output_file = 'Astara Move - Classifications'
 
 query = """
-select 
-	vc.make, 
-	vc.model, 
-	vc."version", 
-	v.color, 
-	vc.specs ->> 'fuel_type' as fuel_type,
-	vc.specs ->> 'environmental_label' as environmental_label,
-	vc.specs ->> 'shift' as shift
-from vehicles v, vehicle_classifications vc 
-where vc.id = v.vehicle_classification_id
-; 
+SELECT 
+    vc.make, 
+    vc.model, 
+    TRIM(vc."version") as "version",
+    v.color, 
+    vc.specs ->> 'fuel_type' AS fuel_type,
+    vc.specs ->> 'environmental_label' AS environmental_label,
+    vc.specs ->> 'shift' AS shift
+FROM vehicles v, vehicle_classifications vc 
+WHERE vc.id = v.vehicle_classification_id
+GROUP BY 
+    vc.make, 
+    vc.model, 
+    "version",
+    v.color,
+    vc.specs ->> 'fuel_type',
+    vc.specs ->> 'environmental_label',
+    vc.specs ->> 'shift'
+ORDER BY 
+    vc.make;
 """
 
 mock_query_response = dict(
@@ -43,6 +52,7 @@ brands_code = dict(
 def serialized_data(elm = mock_query_response):
   make_key = elm['make'].lower().replace(" ", "")
   fuel_value = elm['fuel_type'].lower()
+  rm_chars = lambda str: ''.join([char for char in str if char not in [" ", ".", "-", "_", "(", ")"]])
 
   return {
     # ok - FLET
@@ -72,8 +82,8 @@ def serialized_data(elm = mock_query_response):
     # ok - 2023
     'model year description':2023,
 
-    # ok - VER -> TRES PRIMEROS CARACTERES VERSION SIN ESPACIO EN MAYUSCULAS
-    'finishing / version by model and model year':elm['version'].upper().replace(" ", "").replace(".", "")[:3] if elm['version'] else None,
+    # ok - VER -> 20 PRIMEROS CARACTERES VERSION SIN ESPACIO EN MAYUSCULAS
+    'finishing / version by model and model year':rm_chars(elm['version'].upper())[:19] if elm['version'] else None,
     
     # ok - VERSION
     'version description of model vehicle':elm['version'] if elm['version'] else None,
