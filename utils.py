@@ -14,6 +14,8 @@ def rm_chars(str):
 def date_format(date): 
   return date.strftime("%Y%m%d") if date else None
 
+def is_b2b(elm):
+  return user_type(elm) == 'b2b'
 
 
 """
@@ -70,16 +72,16 @@ def user_type(elm):
   return store_codes.get(elm['store'])
 
 def user_address(elm):
-  return elm['billing_address'].get('address') if (elm['billing_address'] and elm['billing_address'].get('address')) else '🔴'
+  return elm['billing_address'].get('address') if (elm['billing_address']) else None
 
 def user_address_details(elm):
-  return elm['billing_address'].get('address_details') if (elm['billing_address'] and elm['billing_address'].get('address_details')) else '🔴'
+  return elm['billing_address'].get('address_details') if (elm['billing_address']) else None
 
 def user_city(elm):
-  return elm['billing_address'].get('municipality') if (elm['billing_address'] and elm['billing_address'].get('municipality')) else '🔴'
+  return elm['billing_address'].get('municipality') if (elm['billing_address']) else None
 
 def user_material_code(elm):
-  return elm['billing_address'].get('zip_code') if (elm['billing_address'] and elm['billing_address'].get('zip_code')) else '🔴'
+  return elm['billing_address'].get('zip_code') if (elm['billing_address']) else None
 
 def user_newsletter(elm):
   return str(elm['subscribed_to_newsletter'])
@@ -126,21 +128,20 @@ def vh_accesories(elm):
     ]) if elm['accessories'] else None
 
 
-
 # PROFESSIONAL
 
 def user_b2b_name(elm):
-  if user_type(elm) == 'b2b':
-    return '🔴'
+  if is_b2b(elm):
+    return None
   
 def user_b2b_first_name(elm):
-  if user_type(elm) == 'b2b':
-    return '🔴'
+  if is_b2b(elm):
+    return elm.get('contact_person')
   
 def user_b2b_last_name(elm):
-  if user_type(elm) == 'b2b':
-    return '🔴'
+  if is_b2b(elm):
+    return None
   
 def user_b2b_cif(elm):
-  if user_type(elm) == 'b2b':
-    return '🔴'
+  if is_b2b(elm):
+    return elm.get('cif')
