@@ -1,3 +1,5 @@
+import json
+
 from data import (
   fuel_codes, transmission_codes, brands_codes, almacen_codes, status_venta_codes, disponibilidad_codes, store_codes
   )
@@ -17,6 +19,8 @@ def date_format(date):
 def is_b2b(elm):
   return user_type(elm) == 'b2b'
 
+def json_to_str(elm):
+  return json.dumps(elm)
 
 """
 SERIALIZER FUNCTIONS
