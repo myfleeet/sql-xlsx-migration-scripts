@@ -11,34 +11,36 @@ select
 	c.cif,
 	c.phone,
 	c.billing_address,
-  c.subscribed_to_newsletter
-from 
-	clients c 
+  c.subscribed_to_newsletter,
+  c.contact_person
+from clients c 
 join credentials c2 on c.credentials_id = c2.id 
 ; 
 """
 
 mock_query_response = dict( 
-  email='', store='', name='', surnames='', cif='', phone='', billing_address='', subscribed_to_newsletter='',
+  email='',
+  store='',
+  name='',
+  surnames='',
+  cif='',
+  phone='',
+  billing_address='',
+  subscribed_to_newsletter='',
+  contact_person='',
 )
 
 def serialized_data(elm = mock_query_response):
   return {
     'Email': elm['email'],
     'user type (b2b/b2c)': utils.user_type(elm),
-
-    # validated_at is not updated -> TRUE by default ?
-    'User status (active/not active/etc..)': '🔴 true',
-    'email verified': '🔴 true',
-
+    'User status (active/not active/etc..)': 'true',
+    'email verified': 'true',
     'first name': elm.get('name'),
     'last name': elm.get('surnames'),
     'id number': elm.get('cif'),
     'phone number': elm.get('phone'),
-
-    # Confirmar esta lógica
     'address': f"{utils.user_address(elm)} {utils.user_address_details(elm)}",
-
     'city ': utils.user_city(elm),
     'postcode': utils.user_material_code(elm),
     'country': 'Spain',
