@@ -39,7 +39,31 @@ join vehicles v on v.vehicle_classification_id = vc.id
 """
 
 mock_query_response = dict( 
-  vehicle_type='', make='', model='', version='', id='', color='', combustible='', consumption='', fuel_tank='', electric_range='', charging_time='', max_power='', cargo_volume='', height='', width='', length='', co2_emissions='', gear_type='', traction='', number_of_doors='', number_of_seats='', size='', energy_classification='', environmental_label='', accessories='',
+  vehicle_type='',
+  make='',
+  model='',
+  version='',
+  id='',
+  color='',
+  combustible='',
+  consumption='',
+  fuel_tank='',
+  electric_range='',
+  charging_time='',
+  max_power='',
+  cargo_volume='',
+  height='',
+  width='',
+  length='',
+  co2_emissions='',
+  gear_type='',
+  traction='',
+  number_of_doors='',
+  number_of_seats='',
+  size='',
+  energy_classification='',
+  environmental_label='',
+  accessories='',
 )
 
 def serialized_data(elm = mock_query_response):
@@ -49,11 +73,8 @@ def serialized_data(elm = mock_query_response):
     'Family': elm.get('make'),
     'Model': elm.get('model'),
     'Version': elm.get('version'),
-    
-    # Cuál es el formato
-    'Year': '🔴', 
-    'Company code': '🔴', 
-    
+    'Year': None, 
+    'Company code': None, 
     'Exterior color': elm.get('color'),
     
     # JOIN failing
@@ -70,10 +91,7 @@ def serialized_data(elm = mock_query_response):
     'Height': elm.get('height'),
     'Length': elm.get('length'),
     'Width': elm.get('width'),
-    
-    # Qué es
-    'Van format': '🔴', 
-    
+    'Van format': None, 
     'CO2 Emissions': elm.get('co2_emissions'),
     'Gear type': elm.get('gear_type'),
     'Traction': elm.get('traction'),
