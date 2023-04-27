@@ -4,18 +4,18 @@ output_file = 'Catalog Loading Layout'
 
 query = """
 select 
-	vc.make,
-	vc.model,
-	vc.version,
-	vc.id,
-	ci.days_to_subscription,
-	ci.days_max_to_subscription,
-	ci.store,
-	ci.image,
-	ci.tags,
-	ci.highlight_vehicle 
-from 
-	vehicle_classifications vc 
+  vc.make,
+  vc.model,
+  vc.version,
+  vc.id,
+  ci.days_to_subscription,
+  ci.days_max_to_subscription,
+  ci.store,
+  ci.image,
+  ci.tags,
+  ci.highlight_vehicle,
+  ci.meta
+from vehicle_classifications vc 
 join catalog_items ci on ci.vehicle_classification_id = vc.id
 ;
 """
@@ -31,6 +31,7 @@ mock_query_response = dict(
   image='',
   tags='',
   highlight_vehicle='',
+  meta=''
 )
 
 def serialized_data(elm = mock_query_response):
@@ -45,10 +46,7 @@ def serialized_data(elm = mock_query_response):
     'minimum days for start': elm.get('days_to_subscription'), 
     'maximum days for start': elm.get('days_max_to_subscription'),
     'Store type': utils.user_type(elm),
-    
-    # De dónde sale este valor ? 🔴 ------> HTML en BBDDD
-    'CMS content':'🔴',
-    
+    'CMS content': utils.json_to_str(elm.get('meta')),
     'main image': elm.get('image'),
     'type of use': utils.vh_tags(elm),
     'is highlted ': utils.vh_is_highlighted(elm),
