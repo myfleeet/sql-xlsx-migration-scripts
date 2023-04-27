@@ -3,14 +3,24 @@ import utils
 output_file = 'Astara Move - Materials'
 
 query = """
-  select distinct s.cif, TRIM(vc.model) as model, vc.make --, vc."version"
-  from suppliers s, vehicles v, vehicle_classifications vc 
-  where s.id = v.supplier_id and vc.id = v.vehicle_classification_id
-  ;
+select 
+  distinct s.cif, 
+  trim(vc.model) as model, 
+  vc.make --, vc."version"
+from 
+  suppliers s, 
+  vehicles v, 
+  vehicle_classifications vc 
+where 
+  s.id = v.supplier_id and 
+  vc.id = v.vehicle_classification_id
+;
 """
 
 mock_query_response = dict(
-  cif='',make='',model=''
+  cif='',
+  make='',
+  model=''
 )
 
 def serialized_data(elm = mock_query_response):
