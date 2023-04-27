@@ -8,7 +8,7 @@ select
 	vc.model,
 	vc.version,
 	vc.id,
-	ci.days_to_subscription, -- preguntar a Juanjo
+	ci.days_to_subscription,
 	ci.days_max_to_subscription,
 	ci.store,
 	ci.image,
@@ -21,31 +21,32 @@ join catalog_items ci on ci.vehicle_classification_id = vc.id
 """
 
 mock_query_response = dict( 
-  make='', model='', version='', id='', days_to_subscription='', days_max_to_subscription='', store='', image='', tags='', highlight_vehicle='',
+  make='',
+  model='',
+  version='',
+  id='',
+  days_to_subscription='',
+  days_max_to_subscription='',
+  store='',
+  image='',
+  tags='',
+  highlight_vehicle='',
 )
 
 def serialized_data(elm = mock_query_response):
   return {
-    # Cuál es este valor ? 
-    'Classfication - company code':'🔴', 
-
+    'Classfication - company code': None, 
     'Classfication Brand (Manufacturer)': elm.get('make'),
     'Classfication Family': utils.family_code(elm),
     'Classfication Model': elm.get('model'),
-    
-    # De dónde sale este valor ?
-    'Classfication Year':'🔴', 
-    
+    'Classfication Year': None, 
     'Classfication Version': elm.get('version'),
     'astaramove classficationid': elm.get('id'),
-    
-    # De dónde sale este valor ?
-    'minimum days for start':'🔴', 
-    
+    'minimum days for start': elm.get('days_to_subscription'), 
     'maximum days for start': elm.get('days_max_to_subscription'),
     'Store type': utils.user_type(elm),
     
-    # De dónde sale este valor ?
+    # De dónde sale este valor ? 🔴 ------> HTML en BBDDD
     'CMS content':'🔴',
     
     'main image': elm.get('image'),
