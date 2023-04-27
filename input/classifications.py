@@ -3,30 +3,35 @@ import utils
 output_file = 'Astara Move - Classifications'
 
 query = """
-SELECT 
-    vc.make, 
-    vc.model, 
-    TRIM(vc."version") as "version",
-    lower(trim(v.color)) as color, 
-    vc.specs ->> 'fuel_type' AS fuel_type,
-    vc.specs ->> 'environmental_label' AS environmental_label,
-    vc.specs ->> 'shift' AS shift
-FROM vehicles v, vehicle_classifications vc 
-WHERE vc.id = v.vehicle_classification_id
-GROUP BY 
-    vc.make, 
-    vc.model, 
-    "version",
-    v.color,
-    vc.specs ->> 'fuel_type',
-    vc.specs ->> 'environmental_label',
-    vc.specs ->> 'shift'
-ORDER BY 
-    vc.make;
+select 
+  vc.make, 
+  vc.model, 
+  TRIM(vc."version") as "version",
+  lower(trim(v.color)) as color, 
+  vc.specs ->> 'fuel_type' AS fuel_type,
+  vc.specs ->> 'environmental_label' AS environmental_label,
+  vc.specs ->> 'shift' AS shift
+from vehicles v, vehicle_classifications vc 
+where vc.id = v.vehicle_classification_id
+group by
+  vc.make, 
+  vc.model, 
+  "version",
+  v.color,
+  vc.specs ->> 'fuel_type',
+  vc.specs ->> 'environmental_label',
+  vc.specs ->> 'shift'
+order by
+  vc.make;
 """
 
 mock_query_response = dict(
- make='Subaru', model='', version='', color='', fuel_type='', environmental_label='', shift=''
+ make='Subaru', model='',
+  version='',
+  color='',
+  fuel_type='',
+  environmental_label='',
+  shift=''
 )
 
 def serialized_data(elm = mock_query_response):  
