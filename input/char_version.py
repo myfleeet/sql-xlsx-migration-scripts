@@ -4,7 +4,7 @@ output_file = 'Charact_PA_Version'
 
 query = """
 select 
-    distinct TRIM(vc."version") as "version"
+  distinct trim(vc."version") as "version"
 from
 	vehicle_classifications vc
 order by
