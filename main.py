@@ -32,7 +32,7 @@ tables = [
 
 # Query and Excel
 def main():
-  print('🚀 Script started')
+  print('🚀')
   try:
     with get_db_connection() as conn:
       for table in tables:
