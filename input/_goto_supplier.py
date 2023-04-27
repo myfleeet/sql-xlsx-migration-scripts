@@ -17,17 +17,21 @@ from suppliers s
 """
 
 mock_query_response = dict( 
-  id='', cif='', contact_person='', created_at='', email='', name='', phone='', billing_address='',
+  id='',
+  cif='',
+  contact_person='',
+  created_at='',
+  email='',
+  name='',
+  phone='',
+  billing_address='',
 )
 
 def serialized_data(elm = mock_query_response):
   return {
     'id': elm.get('id'),
     'cif': elm.get('cif'),
-
-    # 🔴 Confirmar esta lógica
-    'contact_person': elm['contact_person'] if elm['contact_person'] else elm['name'],
-
+    'contact_person': elm.get('contact_person'),
     'created_at': elm.get('created_at'),
     'email': elm.get('email'),
     'name': elm.get('name'),
