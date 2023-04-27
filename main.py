@@ -32,6 +32,7 @@ tables = [
 
 # Query and Excel
 def main():
+  print('🚀 Script started')
   try:
     with get_db_connection() as conn:
       for table in tables:
@@ -43,7 +44,10 @@ def main():
           ws.append(list(table.serialized_data().keys()))
           for elm in sql_data:
             ws.append(list(table.serialized_data(elm).values()))
-          wb.save(f"out/{table.output_file}.xlsx")
+          project = 'goto' if (table.__name__.startswith('input.goto') or table.__name__.startswith('input._goto')) else 'accenture'
+          wb.save(f"out/{project}/{table.output_file}.xlsx")
+          print(f"✔ [{project}] - {table.output_file}.xlsx")
+    print('✅')
   except Exception as e:
     logging.critical(e, exc_info=True)
 
