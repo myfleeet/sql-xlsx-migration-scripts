@@ -4,7 +4,7 @@ output_file = 'Charact_PA_Model'
 
 query = """
 select 
-    distinct TRIM(vc."model") as "model"
+  distinct trim(vc."model") as "model"
 from
 	vehicle_classifications vc
 order by
