@@ -4,13 +4,15 @@ output_file = 'Classfication Loading Layout'
 
 query = """
 select 
-	vc.vehicle_type,
-	vc.make,
-	vc.model,
-	vc."version", 
-	vc.id,
-	v.color,
-	-- active in store
+  string_agg(distinct ci.store, ', ') as store,
+  ci.published,
+  vc.vehicle_type,
+  vc.make,
+  vc.model,
+  vc."version", 
+  vc.id,
+  lower(v.color),
+  -- active in store
   vc.specs ->> 'fuel_type' as combustible, 
   vc.specs ->> 'fuel_efficiency' as consumption, -- ???
   vc.specs ->> 'fuel_capacity' as fuel_tank,
@@ -32,9 +34,20 @@ select
   upper(vc.specs ->> 'energy_label') as energy_classification,
   upper(vc.specs ->> 'environmental_label') as environmental_label,
   vc.specs as accessories
-  -- is active
 from vehicle_classifications vc  
-join vehicles v on v.vehicle_classification_id = vc.id 
+left join vehicles v on v.vehicle_classification_id = vc.id 
+join catalog_items ci on vc.id = ci.vehicle_classification_id
+group by
+  vc.vehicle_type, 
+  vc.id,
+  ci.published,
+  vc.make,
+  vc.model,
+  vc."version",
+  v.color
+having
+  v.color is not null
+order by vc."version" 
 ;
 """
 
@@ -64,6 +77,8 @@ mock_query_response = dict(
   energy_classification='',
   environmental_label='',
   accessories='',
+  published='',
+  store='', 
 )
 
 def serialized_data(elm = mock_query_response):
@@ -76,10 +91,7 @@ def serialized_data(elm = mock_query_response):
     'Year': None, 
     'Company code': None, 
     'Exterior color': elm.get('color'),
-    
-    # JOIN failing
-    'Active in stores': '🔴',
-    
+    'Active in stores': elm.get('store'),
     'Combustible': elm.get('combustible'),
     'Consumption': elm.get('consumption'),
     'Fuel tank': elm.get('fuel_tank'),
@@ -102,8 +114,6 @@ def serialized_data(elm = mock_query_response):
     'Enviromental label': elm.get('environmental_label'),
     'Accessories': utils.vh_accesories(elm),
     'astaramove classfication id': elm.get('id'),
-    
-    # Todos están activos por defecto ?
-    'is Active': '🔴', 
+    'is Active': 'True' if elm.get('published') else None, 
   }
 
