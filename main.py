@@ -30,6 +30,12 @@ tables = [
   if file.endswith(".py")
 ]
 
+# create folder "out"
+if not os.path.exists('out'):
+  os.makedirs('out')
+  for folder in ['goto', 'accenture']:
+    os.makedirs(f'out/{folder}')
+
 # Query and Excel
 def main():
   print('🚀')
