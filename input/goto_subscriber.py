@@ -4,18 +4,15 @@ output_file = 'Subscriber Loading Layout'
 
 query = """
 select 
-	c.id,
-	c."name",
-	c.surnames,
-	c.email,
-	c.phone,
-	c.billing_address,
-	c.cif 
+  c.id,
+  c."name",
+  c.surnames,
+  c.email,
+  c.phone,
+  c.billing_address,
+  c.cif 
 from subscriptions s 
-join clients c on s.client_id = c.id 
-where
-	-- 🔴 STATUS ???
-	s.status = 'active'
+join clients c on s.client_id = c.id
 ; 
 """
 
