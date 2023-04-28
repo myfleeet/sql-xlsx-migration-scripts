@@ -1,7 +1,7 @@
 # Postgres DB
 DB = dict(
     port=5432,
-    host="",
+    host="host.docker.internal",
     user="",
     password="",
     dbname=""
