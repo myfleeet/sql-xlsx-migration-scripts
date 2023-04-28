@@ -1,7 +1,9 @@
 import json
 
 from data import (
-  fuel_codes, transmission_codes, brands_codes, almacen_codes, status_venta_codes, disponibilidad_codes, store_codes
+  fuel_codes, transmission_codes, brands_codes, 
+  almacen_codes, status_venta_codes, disponibilidad_codes, 
+  store_codes, normalize_astara_addresses
   )
 
 """
@@ -21,6 +23,12 @@ def is_b2b(elm):
 
 def json_to_str(elm):
   return json.dumps(elm)
+
+def hours_format(date):
+  return date.strftime("%H:%M") if date else None  
+
+def time_format(date):
+  return date.strftime("%Y/%m/%d") if date else None
 
 """
 SERIALIZER FUNCTIONS
@@ -149,3 +157,31 @@ def user_b2b_last_name(elm):
 def user_b2b_cif(elm):
   if is_b2b(elm):
     return elm.get('cif')
+  
+# ADDRESS
+def normalize_address(elm):
+  if not elm:
+    return None
+  address = elm.lower().strip()
+  for key in list(normalize_astara_addresses.keys()):
+    for value in normalize_astara_addresses[key]:
+      if value in address:
+        return key
+  return address
+
+def type_of_delivery(elm = None):
+  if not elm:
+    return None
+  address = normalize_address(elm)
+  type = 'door_to_door'
+  for key in list(normalize_astara_addresses.keys()):
+    if address == key:
+      type ='store'
+  return type
+    
+def promo_discount(elm):
+  if elm.get('amount_off'):
+    return f"{elm.get('amount_off')} €" 
+  if elm.get('percent_off'):
+    return f"{elm.get('percent_off')} %"
+  return None
