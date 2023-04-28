@@ -54,7 +54,7 @@ def serialized_data(elm = mock_query_response):
     'Almacen': utils.hub_code(elm),
     'status_de_compra': 'ZZZ3',
     'status_de_venta': None,
-    'Disponibilidad': None,
+    'Disponibilidad': 'DI',
     'NIF_de_cliente': None,
     'Emplazamiento': 'Hub',
     'utilizacion': 'Z7',
