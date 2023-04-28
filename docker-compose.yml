@@ -1,0 +1,12 @@
+version: '3.8'
+
+services:
+  script:
+    build: .
+    volumes:
+      - .:/app
+    command: python3 main.py
+
+networks:
+  fleeet-apis_default:
+    external: true
