@@ -31,7 +31,8 @@ select
 	c2.code,
 	c2.amount_off,
 	c2.percent_off,
-	s.attached_documents
+	s.attached_documents,
+  s.comment
 from subscriptions s 
 left join vehicle_assignments va on va.subscription_id = s.id 
 left join subscription_items si on si.subscription_id  = s.id
@@ -86,7 +87,7 @@ def serialized_data(elm = mock_query_response):
     'family': elm.get('make'),
     'model': elm.get('model'),
     'version': elm.get('version'),
-    'modelyear': '🔴',
+    'modelyear': None,
     'color': elm.get('color'),
     'upholstery': None,
     'VIN': elm.get('vin'),
@@ -108,16 +109,16 @@ def serialized_data(elm = mock_query_response):
     'scoring': None,
     'ProbIncumplimientoScore': 'True' if elm.get('failed_scoring') else None,
     'Nota': None,
-    'Decil': '🔴',
-    'Percentil': '🔴',
-    'deposit': '🔴',
+    'Decil': None,
+    'Percentil': None,
+    'deposit': None,
     'period': elm.get('subscription_pack_period') or 1,
     'extraInsuranceCost': elm.get('insurance_cost'), # EXTRA ? 
     'subscriptionCost': elm.get('subscription_pack_price') if elm.get('subscription_pack_period') else elm.get('base_amount'),
     'PromoCode': elm.get('code'),
     'PromoDisccount': utils.promo_discount(elm),
-    'Comments': '🔴',
-    'History Json': '🔴',
+    'Comments': elm.get('comment'),
+    'History Json': None,
     'Current Contracts': utils.json_to_str(elm.get('attached_documents')),
   }
 
