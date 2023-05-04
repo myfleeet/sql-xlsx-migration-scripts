@@ -6,7 +6,8 @@ query = """
 select 
   distinct s.cif, 
   trim(vc.model) as model, 
-  vc.make --, vc."version"
+  vc.make, 
+  vc."version"
 from 
   suppliers s, 
   vehicles v, 
@@ -14,6 +15,8 @@ from
 where 
   s.id = v.supplier_id and 
   vc.id = v.vehicle_classification_id
+order by
+  model
 ;
 """
 
