@@ -3,7 +3,7 @@ import json
 from data import (
   fuel_codes, transmission_codes, brands_codes, 
   almacen_codes, status_venta_codes, disponibilidad_codes, 
-  store_codes, normalize_astara_addresses
+  store_codes, normalize_astara_addresses, hub_coordinates
   )
 
 """
@@ -37,10 +37,20 @@ SERIALIZER FUNCTIONS
 # MAKE - MODEL - VERSION
 
 def family_code(elm):
-  return rm_chars(elm['model'].upper())[:3]
+  model = [ rm_chars(x.upper()) for x in elm.get('model').strip().split(" ")]
+  if len(model) == 1:
+    if (model[0] in ['500E', 'OUTBACK', 'OUTLANDER', '5008', 'TRANSIT', 'TRANSPORTER', 'TWEET']):
+      return model[0][:2] + model[0][-1:]
+    return model[0][:3]
+  if len(model) == 2:
+    if (model[1] in ['CONNECT']):
+      return model[0][:2] + model[1][:-1]
+    return model[0][:2] + model[1][:1]
+  if len(model) == 3:
+    return model[0][:1] + model[1][:1] + model[2][:1]
 
 def family_desc(elm):
-  return elm['model'].upper()
+  return elm['model'].upper().strip()
 
 def brand_astara_dist(elm):
   make_key = elm['make'].lower().replace(" ", "")
@@ -59,11 +69,10 @@ def material_code(elm):
   return elm['make'].upper().replace(" ", "") + elm['model'].upper().replace(" ", "")
 
 
-
 # HUBS
 
 def hub_code(elm):
-  return almacen_codes.get(elm['hub_name'])
+  return almacen_codes.get(elm['hub_name']) if elm.get('hub_name') else almacen_codes.get('Hub Madrid Norte')
 
 def hub_status_venta(elm):
   return status_venta_codes["Reservado"] if elm['status'] == 'booked' else None
@@ -76,6 +85,8 @@ def hub_disponibilidad(elm):
   if elm['status'] == 'pending_validation':
     return disponibilidad_codes["por validar"]
 
+def hub_coordinate(elm):
+  return hub_coordinates.get(elm.get('name')) if hub_coordinates.get(elm.get('name')) else dict(long=None, lat=None)
 
 
 # CLIENTS
