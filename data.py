@@ -24,7 +24,36 @@ brands_codes = dict(
 almacen_codes = {
   "Hub Madrid Norte":"AM01",
   "Hub Madrid Sur":"AM02",
+  "Campa Leganés":"AM02",
   "Hub Barcelona":"AM03",
+}
+
+hub_coordinates = {
+  'Hub Madrid Norte': dict(
+    address='Calle de los Aragoneses, 3, 28108 Alcobendas, Madrid, España',
+    lat='40.52382424994542',
+    long='-3.6599958886963257',
+  ),
+  'Hub Madrid Sur': dict(
+    address='Avenida Carlos Sainz, 51, 28914 Leganés, Madrid, España.',
+    lat='40.313687799470365',
+    long='-3.772986990552989',
+  ),
+  'Campa Leganés': dict(
+    address='Calle Ricardo Tormo, 102, Leganés, España.',
+    lat='40.309065419102126',
+    long='-3.776312190553207',
+  ),
+  'Hub Barceloneta Port Vell': dict(
+    address='Plaza de Pau Vila, 1, 08039 Barcelona, España.',
+    lat='41.38098447272121',
+    long='2.185338496007691',
+  ),
+  'Campa Mollet': dict(
+    address='Avinguda de Can Prat, no 15, 08100 Mollet del Vallès, Barcelona, España.',
+    lat='41.539726362766935',
+    long='2.223304986213112',
+  ),
 }
 
 status_venta_codes = dict(
