@@ -1,8 +1,15 @@
-# Postgres DB
+import os
+
+IS_CONTAINER = os.environ.get('IS_CONTAINER', False)
+HOST = "host.docker.internal" if IS_CONTAINER else "localhost"
+
+# STAGING
 DB = dict(
-    port=5432,
-    host="host.docker.internal",
-    user="",
-    password="",
-    dbname=""
+    env= dict(
+        port=
+        host=HOST,
+        user=
+        password=
+        dbname=
+    ),
 )
