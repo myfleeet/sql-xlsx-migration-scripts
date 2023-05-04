@@ -1,3 +1,5 @@
+import utils
+
 output_file = 'Hub Layout'
 
 query = """
@@ -15,7 +17,7 @@ from hubs h
 
 mock_query_response = dict( 
   id='',
-  name='',
+  name='Hub Madrid Norte',
   address='',
   main_hub='',
   type='',
@@ -28,8 +30,8 @@ def serialized_data(elm = mock_query_response):
     'Hub ID': elm.get('id'),
     'Name': elm.get('name'),
     'Address': elm.get('address'),
-    'Address Longitude ': None,
-    'Address latitude ': None,
+    'Address Longitude ': utils.hub_coordinate(elm).get('long'),
+    'Address latitude ': utils.hub_coordinate(elm).get('lat'),
     'Is Main': 'true' if elm.get('main_hub') else None,
     'Type': elm.get('type'),
     'Capcity Max': elm.get('vehicle_max_capacity'),
