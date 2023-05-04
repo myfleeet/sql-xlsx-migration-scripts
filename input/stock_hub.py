@@ -23,6 +23,8 @@ left join hubs h on v.hub_id = h.id
 left join vehicle_classifications vc on vc.id = v.vehicle_classification_id
 where    
 	v.status IN ('booked', 'in_catalog', 'pending_validation')
+order by
+  vc.model
 ;
 """
 
