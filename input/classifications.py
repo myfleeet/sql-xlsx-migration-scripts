@@ -41,7 +41,7 @@ def serialized_data(elm = mock_query_response):
     'vehicle brand':elm.get('make').upper(),
     'family code for vehicle': utils.family_code(elm),
     'designation of family of vehicle': utils.family_desc(elm), 
-    'material number': utils.material_code(elm),
+    'material number': utils.commercial_model(elm),
     'material description (short text)': f"{elm.get('make')} {elm.get('model')} {elm.get('version')}".rstrip(),
     'model year by vehicle model':'MY23',
     'model year description':2023,
