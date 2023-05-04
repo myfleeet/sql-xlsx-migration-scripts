@@ -31,6 +31,8 @@ where
 	va.delivery_at is not null and
 	va.unassigned_at is null and
 	va.pick_up_at is null
+order by
+  vc.model
 ;
 """
 
