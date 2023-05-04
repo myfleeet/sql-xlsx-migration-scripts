@@ -15,8 +15,8 @@ import importlib
 
 # DB connection
 @contextlib.contextmanager
-def get_db_connection():
-  url = make_dsn(**settings.DB)
+def get_db_connection(env):
+  url = make_dsn(**settings.DB.get(env))
   conn = psycopg2.connect(url)
   try:
     yield conn
@@ -31,31 +31,36 @@ tables = [
 ]
 
 # create folder "out"
-if not os.path.exists('out'):
-  os.makedirs('out')
+def create_folder():
   for folder in ['goto', 'accenture']:
-    os.makedirs(f'out/{folder}')
+    for env in list(settings.DB.keys()):
+      os.makedirs(f'out/{folder}/{env}', exist_ok=True)
 
 # Query and Excel
 def main():
   print('🚀')
   try:
-    with get_db_connection() as conn:
-      for table in tables:
-        with conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor) as cursor:
-          cursor.execute(table.query)
-          sql_data = cursor.fetchall()
-          wb = openpyxl.Workbook()
-          ws = wb.active
-          ws.append(list(table.serialized_data().keys()))
-          for elm in sql_data:
-            ws.append(list(table.serialized_data(elm).values()))
-          project = 'goto' if (table.__name__.startswith('input.goto') or table.__name__.startswith('input._goto')) else 'accenture'
-          wb.save(f"out/{project}/{table.output_file}.xlsx")
-          print(f"✔ [{project}] - {table.output_file}.xlsx")
+    # For each ENV
+    for env in list(settings.DB.keys()):
+      with get_db_connection(env) as conn:
+        # For each file
+        for table in tables:
+          with conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor) as cursor:
+            cursor.execute(table.query)
+            sql_data = cursor.fetchall()
+            # Write Excel
+            wb = openpyxl.Workbook()
+            ws = wb.active
+            ws.append(list(table.serialized_data().keys()))
+            for elm in sql_data:
+              ws.append(list(table.serialized_data(elm).values()))
+            project = 'goto' if (table.__name__.startswith('input.goto') or table.__name__.startswith('input._goto')) else 'accenture'
+            wb.save(f"out/{project}/{env}/{table.output_file}.xlsx")
+            print(f"✔ [{env}] - [{project}] - {table.output_file}.xlsx")
     print('✅')
   except Exception as e:
     logging.critical(e, exc_info=True)
 
 if __name__ == "__main__":
+  create_folder()
   main()
