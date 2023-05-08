@@ -1,9 +1,11 @@
 import json
+from datetime import datetime
 
 from data import (
   fuel_codes, transmission_codes, brands_codes, 
   almacen_codes, status_venta_codes, disponibilidad_codes, 
-  store_codes, normalize_astara_addresses, hub_coordinates
+  store_codes, normalize_astara_addresses, hub_coordinates,
+  message_type_codes, vehicle_history_action_type_codes
   )
 
 """
@@ -74,6 +76,9 @@ def material_code(elm):
 def hub_code(elm):
   return almacen_codes.get(elm['hub_name']) if elm.get('hub_name') else almacen_codes.get('Hub Madrid Norte')
 
+def hub_name(elm):
+  return elm.get('name')
+
 def hub_status_venta(elm):
   return status_venta_codes["Reservado"] if elm['status'] == 'booked' else None
 
@@ -87,7 +92,6 @@ def hub_disponibilidad(elm):
 
 def hub_coordinate(elm):
   return hub_coordinates.get(elm.get('name')) if hub_coordinates.get(elm.get('name')) else dict(long=None, lat=None)
-
 
 # CLIENTS
 
@@ -196,3 +200,59 @@ def promo_discount(elm):
   if elm.get('percent_off'):
     return f"{elm.get('percent_off')} %"
   return None
+
+def message_type(elm = None):
+  # message_type_codes
+  return '🔴'
+
+def vh_action_type(elm = None):
+  # vehicle_history_action_type_codes
+  return None
+
+#  Reports
+
+def report_check(report):
+  if not report: 
+    return dict(
+      check_in=dict(created_at=None, report_info={}), 
+      check_client=dict(created_at=None, report_info={}),
+    )
+
+  check_in = {}
+  check_client = {}
+  
+  for elm in report:
+    check_type = elm.get('type')
+    created_at = elm.get('created_at')
+    report_info = elm.get('report')
+
+    if check_type in ("check-in", "check-1"):
+      if (
+        not check_in.get('created_at') or
+        (
+          check_in.get('created_at') and
+          datetime.fromisoformat(check_in.get('created_at')) < datetime.fromisoformat(created_at)
+        )
+      ):
+        check_in.update({
+          'created_at': created_at,
+          'report_info': report_info,
+        })
+
+    if check_type in ("check-client", "check-2"):
+      if (
+        not check_client.get('created_at') or
+        (
+          check_client.get('created_at') and
+          datetime.fromisoformat(check_client.get('created_at')) < datetime.fromisoformat(created_at)
+        )
+      ):
+        check_client.update({
+          'created_at': created_at,
+          'report_info': report_info,
+        })
+      
+  return dict(
+    check_in=check_in if check_in else dict(created_at=None, report_info={}), 
+    check_client=check_client if check_client else dict(created_at=None, report_info={}), 
+    ) 

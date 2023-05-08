@@ -127,3 +127,16 @@ normalize_astara_addresses = {
   'Avinguda de Can Prat, no 15, 08100 Mollet del Vallès, Barcelona, España': []
 }
 
+# Accenture
+
+message_type_codes = {
+  "payment": "", 
+  "status": ""
+}
+
+vehicle_history_action_type_codes = {
+  "report": "", #  recogida, entrega, checks
+  "subscription": "", # Suscripción mensual
+  "creation": "",  # Alta del vehículo
+  "any other": ""
+}
