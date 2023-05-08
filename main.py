@@ -43,12 +43,24 @@ def main():
     # For each ENV
     for env in list(settings.DB.keys()):
       with get_db_connection(env) as conn:
+        
         # For each file
         for table in tables:
           with conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor) as cursor:
+            
+            # Handle Errors in invalid file format
+            if (
+              not hasattr(table, 'query') or
+              not hasattr(table, 'serialized_data') or
+              not hasattr(table, 'output_file')
+            ):
+              raise Exception(f"\n\n[invalid format in file {table.__name__}]:\nshould contain query, serialized_data, output_file variables\n\n")
+            
+            # Execute query
             cursor.execute(table.query)
             sql_data = cursor.fetchall()
-            # Write Excel
+            
+            # Write the excel file
             wb = openpyxl.Workbook()
             ws = wb.active
             ws.append(list(table.serialized_data().keys()))
@@ -56,6 +68,8 @@ def main():
               ws.append(list(table.serialized_data(elm).values()))
             project = 'goto' if (table.__name__.startswith('input.goto') or table.__name__.startswith('input._goto')) else 'accenture'
             wb.save(f"out/{project}/{env}/{table.output_file}.xlsx")
+
+            # Log success
             print(f"✔ [{env}] - [{project}] - {table.output_file}.xlsx")
     print('✅')
   except Exception as e:
