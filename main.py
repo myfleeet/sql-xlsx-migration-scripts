@@ -1,9 +1,9 @@
 # DB
-import settings
+import configs.settings as settings
 import psycopg2
-import contextlib
 import psycopg2.extras
-from psycopg2.extensions import make_dsn
+from configs.db import get_db_connection
+from configs.scaffolder import create_folder
 
 # Excel
 import openpyxl
@@ -13,15 +13,6 @@ import logging
 import os
 import importlib
 
-# DB connection
-@contextlib.contextmanager
-def get_db_connection(env):
-  url = make_dsn(**settings.DB.get(env))
-  conn = psycopg2.connect(url)
-  try:
-    yield conn
-  finally:
-    conn.close()
 
 # Files
 tables = [
@@ -29,12 +20,6 @@ tables = [
   for file in os.listdir("input")
   if file.endswith(".py")
 ]
-
-# create folder "out"
-def create_folder():
-  for folder in ['goto', 'accenture']:
-    for env in list(settings.DB.keys()):
-      os.makedirs(f'out/{folder}/{env}', exist_ok=True)
 
 # Query and Excel
 def main():
