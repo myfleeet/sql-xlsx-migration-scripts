@@ -12,12 +12,21 @@ import openpyxl
 # utils
 import logging
 
+"""
+GLOBALS
+"""
+
+# 🟧 Update file name 
 output_file = "Vehicle History"
 
+# 🟧 Update project name
+project = "accenture"
+
 
 """
-SERIALIZERS
+HELPER FUNCTION
 """
+
 
 def check_incidence_counter(elm):
     if len(elm.get("incidences_1")) != 0:
@@ -25,113 +34,103 @@ def check_incidence_counter(elm):
     incidences = 0
     if elm.get("incidences_2") is not None:
         for incident in list(elm.get("incidences_2")):
-            if incident.get('checks') is not None:
-                for check in incident.get('checks'):
-                    if check.get('incidence_severity') is not None:
+            if incident.get("checks") is not None:
+                for check in incident.get("checks"):
+                    if check.get("incidence_severity") is not None:
                         incidences = incidences + 1
     return incidences
 
-checks_mock_query_response = dict(
-    type="",
-    vin="",
-    vehicle_id="",
-    date="",
-    checked_at="",
-    check_report_id="",
-    incidences_1="",
-    incidences_2="",
-    report_check_type="",
-)
 
-def checks_serialized_data(elm=checks_mock_query_response):
+"""
+SERIALIZER
+"""
+
+# schema
+# https://logistics.astaramove.com/vehicles/d1554884-fca4-4056-b161-f3f512021bd4/history
+serialized_data = {
+    "VIN": None,
+    "Move Internal Vehicle ID": None,
+    "Action Date": None,
+    "Action Description": None,
+    "Action Type": None,
+    "Action link (id) for Action": None,
+}
+
+
+def checks_serialized_data(elm):
     return {
         "VIN": elm.get("vin"),
         "Move Internal Vehicle ID": elm.get("vehicle_id"),
-        "Action Date": elm.get("date"),
-        "Action Description": dict(
+        "Action Date": utils.to_utc_iso_string(elm.get("date")),
+        "Action Description": utils.json_to_str(dict(
             check_report_id=elm.get("check_report_id"),
             checked_at=elm.get("checked_at"),
-            date=elm.get("date"),
+            date=utils.to_utc_iso_string(elm.get("date")),
             incidence_count=check_incidence_counter(elm),
             report_check_type=elm.get("report_check_type"),
             type=elm.get("type"),
-        ),
+        )),
         "Action Type": elm.get("type"),
         "Action link (id) for Action": elm.get("vehicle_id"),
     }
 
 
-subscription_mock_query_response = dict(
-    type="",
-    vin="",
-    vehicle_id="",
-    date="",
-    checked_at="",
-    check_report_id="",
-    incidences_1="",
-    incidences_2="",
-    report_check_type="",
-)
-
-
-def subscription_serialized_data(elm=subscription_mock_query_response):
+def subscription_serialized_data(elm):
     return {
         "VIN": elm.get("vin"),
         "Move Internal Vehicle ID": elm.get("vehicle_id"),
-        "Action Date": elm.get("date"),
-        "Action Description": dict(),
+        "Action Date": utils.to_utc_iso_string(elm.get("date")),
+        "Action Description": utils.json_to_str(dict(
+            client_id=elm.get("client_id"),
+            date=utils.to_utc_iso_string(elm.get("date")),
+            delivered_to_client=elm.get("delivered_to_client"),
+            delivery_at=utils.to_utc_iso_string(elm.get("delivery_at")),
+            delivery_document=elm.get("delivery_document"),
+            delivery_is_external=elm.get("delivery_is_external"),
+            finished_at=utils.to_utc_iso_string(elm.get("finished_at")),
+            periodicity=elm.get("periodicity"),
+            pick_up_at=utils.to_utc_iso_string(elm.get("pick_up_at")),
+            pick_up_document=elm.get("pick_up_document"),
+            pick_up_is_external=elm.get("pick_up_is_external"),
+            picked_up_from_client=elm.get("picked_up_from_client"),
+            started_at=utils.to_utc_iso_string(elm.get("started_at")),
+            subscription_id=elm.get("subscription_id"),
+            type=elm.get("type"),
+            vehicle_assignment_id=elm.get("vehicle_assignment_id"),
+        )),
         "Action Type": elm.get("type"),
         "Action link (id) for Action": elm.get("vehicle_id"),
     }
 
 
-registration_mock_query_response = dict(
-    type="",
-    vin="",
-    vehicle_id="",
-    date="",
-    checked_at="",
-    check_report_id="",
-    incidences_1="",
-    incidences_2="",
-    report_check_type="",
-)
-
-
-def registration_serialized_data(elm=registration_mock_query_response):
+def registration_serialized_data(elm):
     return {
         "VIN": elm.get("vin"),
         "Move Internal Vehicle ID": elm.get("vehicle_id"),
-        "Action Date": elm.get("date"),
-        "Action Description": dict(),
+        "Action Date": utils.to_utc_iso_string(elm.get("date")),
+        "Action Description": utils.json_to_str(dict(
+            date=utils.to_utc_iso_string(elm.get("date")),
+            supplier_id=elm.get("supplier_id"),
+            type=elm.get("type"),
+        )),
         "Action Type": elm.get("type"),
         "Action link (id) for Action": elm.get("vehicle_id"),
     }
 
 
-supplier_return_mock_query_response = dict(
-    type="",
-    vin="",
-    vehicle_id="",
-    date="",
-    checked_at="",
-    check_report_id="",
-    incidences_1="",
-    incidences_2="",
-    report_check_type="",
-)
-
-
-def supplier_return_serialized_data(elm=supplier_return_mock_query_response):
+def supplier_return_serialized_data(elm):
     return {
         "VIN": elm.get("vin"),
         "Move Internal Vehicle ID": elm.get("vehicle_id"),
-        "Action Date": elm.get("date"),
-        "Action Description": dict(),
+        "Action Date": utils.to_utc_iso_string(elm.get("date")),
+        "Action Description": utils.json_to_str(dict(
+            date=utils.to_utc_iso_string(elm.get("date")),
+            supplier_id=elm.get("supplier_id"),
+            type=elm.get("type"),
+        )),
         "Action Type": elm.get("type"),
         "Action link (id) for Action": elm.get("vehicle_id"),
     }
-
 
 """
 QUERY
@@ -145,9 +144,9 @@ query = dict(
     get_by_id=dict(
         checks=dict(
             query="""
-            select 
+            select
               'check' as type,
-              v.vin, 
+              v.vin,
               cr.vehicle_id,
               cr.created_at as date,
               cr.report ->> 'meta' as checked_at,
@@ -155,9 +154,9 @@ query = dict(
               cr.incidences as incidences_1,
               cr.report -> 'check_groups' as incidences_2, -- for each "check_group", return "checks" , for each "incidence_severity" not NULL
               cr.report ->> 'check_type' as report_check_type
-            from check_reports cr 
-            join vehicles v on v.id = cr.vehicle_id 
-            where 
+            from check_reports cr
+            join vehicles v on v.id = cr.vehicle_id
+            where
                 cr.vehicle_id = '{id}' and
                 v.vin = '{vin}'
             ;
@@ -177,13 +176,12 @@ query = dict(
               s.client_id,
               s.id as subscription_id,
               va.id as vehicle_assignment_id,
-              va.delivered_to_client, 
               va.picked_up_from_client,
               va.delivery_document,
               va.pick_up_document,
-              va.delivery_is_external, 
+              va.delivery_is_external,
               va.pick_up_is_external,
-              va.delivery_at, 
+              va.delivery_at,
               va.pick_up_at,
               va.unassigned_at ,
               va.delivered_to_client
@@ -192,7 +190,7 @@ query = dict(
             join vehicles v on v.id = va.vehicle_id
             where
               va.vehicle_id = '{id}' and
-              v.vin = '{vin}' and 
+              v.vin = '{vin}' and
               ((va.unassigned_at is not null and va.delivered_to_client = 'true') or
               va.unassigned_at is null)
             ;
@@ -217,14 +215,14 @@ query = dict(
         ),
         supplier_returns=dict(
             query="""
-            select 
+            select
               'supplier_return' as type,
-              v.vin, 
+              v.vin,
               v.id as vehicle_id,
               v.returned_real_at as date,
               v.supplier_id as supplier_id
-            from vehicles v 
-            where 
+            from vehicles v
+            where
                 v.id = '{id}' and
                 v.vin = '{vin}'
             ;
@@ -235,19 +233,8 @@ query = dict(
 )
 
 
-# https://logistics.astaramove.com/vehicles/d1554884-fca4-4056-b161-f3f512021bd4/history
-# serialized_data = {
-#     "VIN": None,
-#     "Move Internal Vehicle ID": None,
-#     "Action Date": None,
-#     "Action Description": None,
-#     "Action Type": utils.vh_action_type(),
-#     "Action link (id) for Action": None,  # Link al que redirige
-# }
-
-
 # Query and Excel
-def hello():
+def high_hopes():
     print("🚀")
     try:
         for env in list(settings.DB.keys()):
@@ -259,8 +246,14 @@ def hello():
                     cursor.execute(query.get("get_all_ids"))
                     sql_data = cursor.fetchall()
 
+                    # Write the excel file
+                    wb = openpyxl.Workbook()
+                    ws = wb.active
+                    ws.append(list(serialized_data.keys()))
+
                     # For each ID execute all the queries
-                    for sql_data_elm in sql_data:
+                    for idx, sql_data_elm in enumerate(sql_data):
+                        
                         # For each required table execute the Query
                         for key in query.get("get_by_id").keys():
                             sql_query = (
@@ -277,28 +270,16 @@ def hello():
 
                             # Serialize each valid response into a row
                             for res in request:
-                                FOO = query["get_by_id"][key]["serialized_data"](res)
+                                col = query["get_by_id"][key]["serialized_data"](res)
+                                ws.append(list(col.values()))
 
-                                if key == "subscription":
-                                    print("🔴")
-                                    print(FOO)
-
-
-                    # Write the excel file
-                    # wb = openpyxl.Workbook()
-                    # ws = wb.active
-                    # ws.append(list(table.serialized_data().keys()))
-                    # for elm in sql_data:
-                    #   ws.append(list(table.serialized_data(elm).values()))
-                    # project = 'goto' if (table.__name__.startswith('input.goto') or table.__name__.startswith('input._goto')) else 'accenture'
-                    # wb.save(f"out/{project}/{env}/{table.output_file}.xlsx")
-
-                    # # Log success
-                    # print(f"✔ [{env}] - [{project}] - {table.output_file}.xlsx")
+                        print(f"✔ [{env}] - {idx + 1} / {len(sql_data)}")
+                    wb.save(f"out/{project}/{env}/{output_file}.xlsx")
+                    print(f"✔ [{env}] - [{project}] - {output_file}.xlsx")
         print("✅")
     except Exception as e:
         logging.critical(e, exc_info=True)
 
 
 create_folder()
-hello()
+high_hopes()
