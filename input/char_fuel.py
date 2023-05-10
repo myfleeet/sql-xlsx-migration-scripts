@@ -1,4 +1,4 @@
-import utils
+import utils.utils as utils
 
 output_file = 'Charact_PA_Fuel'
 
