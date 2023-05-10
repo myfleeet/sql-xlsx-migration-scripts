@@ -108,8 +108,8 @@ def serialized_data(elm = mock_query_response):
     'location address': utils.hub_coordinate(elm).get('address'),
     # Checks -> enlace y fecha de último (solo 1 ID por VH) # https://logistics.astaramove.com/vehicles/d1554884-fca4-4056-b161-f3f512021bd4/detail/
     'Check initial': utils.report_check(elm.get('reports')).get('check_in').get('created_at'),
-    'check initial document': '🔴',
+    'check initial document': None,
     'Check client': utils.report_check(elm.get('reports')).get('check_client').get('created_at'),
-    'check client document': '🔴',
+    'check client document': None,
   }
  
