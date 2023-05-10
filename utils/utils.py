@@ -1,7 +1,7 @@
 import json
 from datetime import datetime
 
-from data import (
+from utils.data import (
   fuel_codes, transmission_codes, brands_codes, 
   almacen_codes, status_venta_codes, disponibilidad_codes, 
   store_codes, normalize_astara_addresses, hub_coordinates,
