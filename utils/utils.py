@@ -1,5 +1,6 @@
 import json
-from datetime import datetime
+from datetime import timezone, datetime
+from dateutil import parser
 
 from utils.data import (
   fuel_codes, transmission_codes, brands_codes, 
@@ -31,6 +32,14 @@ def hours_format(date):
 
 def time_format(date):
   return date.strftime("%Y/%m/%d") if date else None
+
+def to_utc_iso_string(date):
+    if date is None:
+        return
+    parsed = parser.parse(date) if type(date) is str else date
+    if parsed.tzinfo == None:
+        return parsed.replace(tzinfo=timezone.utc).isoformat()
+    return parsed.astimezone(tz=timezone.utc).isoformat()
 
 """
 SERIALIZER FUNCTIONS
