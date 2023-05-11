@@ -3,7 +3,7 @@ import configs.settings as settings
 import psycopg2
 import psycopg2.extras
 from configs.db import get_db_connection
-from configs.scaffolder import create_folder
+from configs.scaffolder import create_folder, define_folder_project_name
 
 # Excel
 import openpyxl
@@ -51,7 +51,8 @@ def main():
             ws.append(list(table.serialized_data().keys()))
             for elm in sql_data:
               ws.append(list(table.serialized_data(elm).values()))
-            project = 'goto' if (table.__name__.startswith('input.goto') or table.__name__.startswith('input._goto')) else 'accenture'
+
+            project = define_folder_project_name(table.__name__.replace('input.', ''))
             wb.save(f"out/{project}/{env}/{table.output_file}.xlsx")
 
             # Log success
