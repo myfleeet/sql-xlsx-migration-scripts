@@ -4,7 +4,7 @@ import configs.settings as settings
 import psycopg2
 import psycopg2.extras
 from configs.db import get_db_connection
-from configs.scaffolder import create_folder
+from configs.scaffolder import create_folder, define_folder_project_name, folders
 
 # Excel
 import openpyxl
@@ -18,10 +18,7 @@ GLOBALS
 
 # 🟧 Update file name 
 output_file = "Vehicle History"
-
-# 🟧 Update project name
-project = "accenture"
-
+global_folder = 'goto'
 
 """
 HELPER FUNCTION
@@ -274,6 +271,9 @@ def high_hopes():
                                 ws.append(list(col.values()))
 
                         print(f"✔ [{env}] - {idx + 1} / {len(sql_data)}")
+
+                    # Define the output file name
+                    project = define_folder_project_name(folders.get(global_folder))
                     wb.save(f"out/{project}/{env}/{output_file}.xlsx")
                     print(f"✔ [{env}] - [{project}] - {output_file}.xlsx")
         print("✅")
