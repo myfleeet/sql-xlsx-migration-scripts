@@ -12,6 +12,8 @@ select
 	v.insurance_by,
 	v.insurance_company,
 	v.insurance_cost,
+	v.current_tracker_id, 
+	v.last_km, 
 	json_agg(
 		json_build_object(
 			'type', cr2.report ->> 'check_type',
@@ -40,6 +42,8 @@ group by
 	hub_name, 
 	hub_address,
   v.status,
+  v.current_tracker_id, 
+  v.last_km, 
 	insurance_by,
 	insurance_company,
 	insurance_cost
@@ -85,6 +89,8 @@ mock_query_response = dict(
   insurance_by='',
   insurance_company='',
   insurance_cost='',
+  current_tracker_id='',
+  last_km='',
   reports=[],
 )
 
@@ -100,12 +106,12 @@ def serialized_data(elm = mock_query_response):
     'Asegurado por': elm.get('insurance_by'),
     'Precio poliza': elm.get('insurance_cost'),
     # IOT
-    'astara connect id (oid)': None,
-    'Current KM from connect': None,
-    'Current KM by operation team': None,
-    'location latitude': utils.hub_coordinate(elm).get('lat'),
-    'location longitude': utils.hub_coordinate(elm).get('long'),
-    'location address': utils.hub_coordinate(elm).get('address'),
+    'astara connect id (oid)': elm.get('current_tracker_id'),
+    'Current KM from connect': None, 
+    'Current KM by operation team': elm.get('last_km'),
+    'location latitude': utils.hub_coordinate(elm).get('lat'), # 🔴  doble check coordenadas in_catalog
+    'location longitude': utils.hub_coordinate(elm).get('long'), # 🔴  doble check coordenadas in_catalog
+    'location address': utils.hub_coordinate(elm).get('address'), # 🔴  doble check coordenadas in_catalog
     # Checks -> enlace y fecha de último (solo 1 ID por VH) # https://logistics.astaramove.com/vehicles/d1554884-fca4-4056-b161-f3f512021bd4/detail/
     'Check initial': utils.report_check(elm.get('reports')).get('check_in').get('created_at'),
     'check initial document': None,

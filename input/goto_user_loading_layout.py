@@ -65,3 +65,4 @@ def serialized_data(elm = mock_query_response):
     'territory': 'ES',
     'Hashed Password': elm.get('password_digest'),
   }
+
