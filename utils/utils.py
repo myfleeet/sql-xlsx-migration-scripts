@@ -41,6 +41,12 @@ def to_utc_iso_string(date):
         return parsed.replace(tzinfo=timezone.utc).isoformat()
     return parsed.astimezone(tz=timezone.utc).isoformat()
 
+def stripe_payment_expiration_format(elm):
+  if elm.get('exp_month') and elm.get('exp_year'):
+    normalized_month = elm.get('exp_month') if len(elm.get('exp_month')) == 2 else '0' + elm.get('exp_month')
+    return normalized_month + elm.get('exp_year')[2:]
+  return None
+
 """
 SERIALIZER FUNCTIONS
 """
