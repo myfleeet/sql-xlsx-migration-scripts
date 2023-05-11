@@ -9,6 +9,7 @@ from configs.scaffolder import create_folder, define_folder_project_name
 import openpyxl
 
 # utils
+import time
 import logging
 import os
 import importlib
@@ -24,6 +25,7 @@ tables = [
 # Query and Excel
 def main():
   print('🚀')
+  start_time = time.time()
   try:
     # For each ENV
     for env in list(settings.DB.keys()):
@@ -57,6 +59,9 @@ def main():
 
             # Log success
             print(f"✔ [{env}] - [{project}] - {table.output_file}.xlsx")
+   
+    total_time = round(time.time() - start_time, 2)
+    print(f"🏁 {total_time} seconds")
     print('✅')
   except Exception as e:
     logging.critical(e, exc_info=True)

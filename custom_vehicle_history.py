@@ -1,4 +1,5 @@
 # DB
+import time
 import utils.utils as utils
 import configs.settings as settings
 import psycopg2
@@ -233,6 +234,7 @@ query = dict(
 # Query and Excel
 def high_hopes():
     print("🚀")
+    start_time = time.time()
     try:
         for env in list(settings.DB.keys()):
             with get_db_connection(env) as conn:
@@ -276,6 +278,10 @@ def high_hopes():
                     project = define_folder_project_name(folders.get(global_folder))
                     wb.save(f"out/{project}/{env}/{output_file}.xlsx")
                     print(f"✔ [{env}] - [{project}] - {output_file}.xlsx")
+        
+        # Print the total time
+        total_time = round(time.time() - start_time, 2)
+        print(f"🏁 {total_time} seconds - {total_time / 60} minutes")
         print("✅")
     except Exception as e:
         logging.critical(e, exc_info=True)
