@@ -11,8 +11,7 @@ select
   c.phone,
   c.billing_address,
   c.cif 
-from subscriptions s 
-join clients c on s.client_id = c.id
+from clients c
 ; 
 """
 
