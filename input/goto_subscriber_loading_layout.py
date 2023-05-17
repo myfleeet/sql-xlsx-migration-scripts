@@ -4,14 +4,15 @@ output_file = 'Subscriber Loading Layout'
 
 query = """
 select 
-  c.id,
+  distinct c.id,
   c."name",
   c.surnames,
   c.email,
   c.phone,
   c.billing_address,
   c.cif 
-from clients c
+from subscriptions s
+left join clients c on c.id = s.client_id 
 ; 
 """
 
