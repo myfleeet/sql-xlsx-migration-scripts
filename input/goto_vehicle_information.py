@@ -8,12 +8,16 @@ select
 	cr2.vehicle_id,
 	h."name" as hub_name,
 	h.address as hub_address,
-  v.status,
+  	v.status,
 	v.insurance_by,
 	v.insurance_company,
 	v.insurance_cost,
 	v.current_tracker_id, 
-	v.last_km, 
+	v.last_km,
+	v.created_at,
+	v.received_at,
+	v.returned_at,
+	v.returned_real_at,
 	json_agg(
 		json_build_object(
 			'type', cr2.report ->> 'check_type',
@@ -41,12 +45,16 @@ group by
 	cr2.vehicle_id,
 	hub_name, 
 	hub_address,
-  v.status,
-  v.current_tracker_id, 
-  v.last_km, 
-	insurance_by,
-	insurance_company,
-	insurance_cost
+	v.status,
+	v.current_tracker_id, 
+	v.last_km, 
+	v.insurance_by,
+	v.insurance_company,
+	v.insurance_cost,
+	v.created_at,
+	v.received_at,
+	v.returned_at,
+	v.returned_real_at
 ;
 """
 
@@ -92,6 +100,10 @@ mock_query_response = dict(
   current_tracker_id='',
   last_km='',
   reports=[],
+  created_at='',
+  received_at='',
+  returned_at='',
+  returned_real_at='',
 )
 
 def serialized_data(elm = mock_query_response):
@@ -117,5 +129,10 @@ def serialized_data(elm = mock_query_response):
     'check initial document': None,
     'Check client': utils.report_check(elm.get('reports')).get('check_client').get('created_at'),
     'check client document': None,
+    # News
+	'alta en logistica': elm.get('created_at'),
+	'incorporacion a la flota': elm.get('received_at'),
+	'devolucion prevista': elm.get('returned_at'),
+	'devolucion definitiva': elm.get('returned_real_at'),
   }
  
