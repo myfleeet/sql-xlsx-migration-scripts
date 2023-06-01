@@ -13,7 +13,10 @@ select
 	c.phone,
 	c.billing_address,
 	c.contact_person,
-	c2.password_digest
+	c2.password_digest,
+	c.can_leave_country,
+	c.can_pay_with_sepa,
+	c.can_do_same_day_subscriptions 
 from clients c
 left join credentials c2 on c.credentials_id = c2.id
 ; 
@@ -30,6 +33,9 @@ mock_query_response = dict(
   billing_address='',
   contact_person='',
   password_digest='',
+  can_leave_country='',
+  can_pay_with_sepa='',
+  can_do_same_day_subscriptions='',
 )
 
 def serialized_data(elm = mock_query_response):
@@ -64,5 +70,8 @@ def serialized_data(elm = mock_query_response):
     'documentType': 'CIF',
     'territory': 'ES',
     'Hashed Password': elm.get('password_digest'),
+    "allowLeaveTerritory": 'True' if elm.get('can_leave_country') == True else '',
+    "allowSEPA": 'True' if elm.get('can_pay_with_sepa') == True else '',
+    "ignoreMarginOnDays": 'True' if elm.get('can_do_same_day_subscriptions') == True else '',
   }
 
