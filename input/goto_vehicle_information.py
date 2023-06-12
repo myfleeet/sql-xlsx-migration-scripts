@@ -18,6 +18,8 @@ select
 	v.received_at,
 	v.returned_at,
 	v.returned_real_at,
+	v.vehicle_type,
+	v.license_plate,
 	json_agg(
 		json_build_object(
 			'type', cr2.report ->> 'check_type',
@@ -54,7 +56,9 @@ group by
 	v.created_at,
 	v.received_at,
 	v.returned_at,
-	v.returned_real_at
+	v.returned_real_at,
+	v.vehicle_type,
+	v.license_plate
 ;
 """
 
@@ -104,6 +108,8 @@ mock_query_response = dict(
   received_at='',
   returned_at='',
   returned_real_at='',
+  vehicle_type='',
+  license_plate='',
 )
 
 def serialized_data(elm = mock_query_response):
@@ -112,6 +118,8 @@ def serialized_data(elm = mock_query_response):
     'Move Internal Vehicle ID': elm.get('vehicle_id'),
     'Hub name': elm.get('hub_name'),
     'Current status': elm.get('status'),
+    "Vehicle type": elm.get('vehicle_type'),
+    "License plate": elm.get('license_plate'),
     # Seguro
     'Aseguradora': elm.get('insurance_company'),
     'No poliza': None,
