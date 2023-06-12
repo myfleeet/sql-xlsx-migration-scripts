@@ -1,3 +1,5 @@
+import utils.utils as utils
+
 output_file = 'Catalog classification Pricing Layout'
 
 query = """
@@ -55,7 +57,7 @@ def serialized_data(elm = mock_query_response):
   return {
     'Classfication - company code': None,
     'Classfication Brand (Manufacturer)': elm.get('make'),
-    'Classfication Family': elm.get('make'),
+    'Classfication Family': utils.family_code(elm),
     'Classfication Model': elm.get('model'),
     'Classfication Year': None,
     'Classfication Version': elm.get('version'),

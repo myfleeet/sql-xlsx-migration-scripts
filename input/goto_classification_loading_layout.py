@@ -85,7 +85,7 @@ def serialized_data(elm = mock_query_response):
   return {
     'Vehicle Type': elm.get('vehicle_type'),
     'Brand (Manufacturer)': elm.get('make'),
-    'Family': elm.get('make'),
+    'Family': utils.family_code(elm),
     'Model': elm.get('model'),
     'Version': elm.get('version'),
     'Year': None, 

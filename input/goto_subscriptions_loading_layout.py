@@ -84,7 +84,7 @@ def serialized_data(elm = mock_query_response):
     'Substatus': None,
     'SubscriptionOrigin': None,
     'Brand': elm.get('make'),
-    'family': elm.get('make'),
+    'family': utils.family_code(elm),
     'model': elm.get('model'),
     'version': elm.get('version'),
     'modelyear': None,
