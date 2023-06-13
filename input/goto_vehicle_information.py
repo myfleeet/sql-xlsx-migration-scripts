@@ -5,7 +5,7 @@ output_file = 'Vehicle infromation'
 query = """
 select
 	v.vin,
-	cr2.vehicle_id,
+	v.id as vehicle_id,
 	h."name" as hub_name,
 	h.address as hub_address,
   	v.status,
@@ -27,24 +27,29 @@ select
 			'report', cr2.report
 		) 
 	) as reports
-from (
+from vehicles v
+left join (
 	select 
-		max(cr.created_at) as created_at,
-		cr.report ->> 'check_type' as check_type,
-		cr.vehicle_id 
-	from check_reports cr  
-	group by
-		check_type,
-		cr.vehicle_id
-	having
-		cr.report ->> 'check_type' in ('check-in', 'check-1', 'check-client', 'check-2')
-) cr1
-left join check_reports cr2 on cr1.check_type = cr2.report ->> 'check_type' and cr1.created_at = cr2.created_at
-join vehicles v on v.id = cr2.vehicle_id 
+		max(cr1.created_at) as created_at,
+		cr1.vehicle_id,
+		cr1.report
+	from  (
+		select 
+			cr.vehicle_id,
+			cr.created_at,
+			cr.report
+		from check_reports cr
+		where 
+			cr.report ->> 'check_type' in ('check-in', 'check-1', 'check-client', 'check-2')
+	) cr1
+	group by 
+		cr1.vehicle_id, 
+		cr1.report
+) cr2 on v.id = cr2.vehicle_id
 left join hubs h on h.id = v.hub_id
 group by 
 	v.vin,
-	cr2.vehicle_id,
+	v.id,
 	hub_name, 
 	hub_address,
 	v.status,
