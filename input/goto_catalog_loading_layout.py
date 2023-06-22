@@ -14,7 +14,8 @@ select
   ci.image,
   ci.tags,
   ci.highlight_vehicle,
-  ci.meta
+  ci.meta,
+  ci.published 
 from vehicle_classifications vc 
 join catalog_items ci on ci.vehicle_classification_id = vc.id
 ;
@@ -50,5 +51,6 @@ def serialized_data(elm = mock_query_response):
     'main image': elm.get('image'),
     'type of use': utils.vh_tags(elm),
     'is highlted ': utils.vh_is_highlighted(elm),
+    "published": 'true' if elm.get('published') else 'false'
   }
 
