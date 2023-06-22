@@ -444,3 +444,9 @@ def period_normalizer(elm):
     if elm.get("periodicity") == "weekly":
         return "weekly"
     return elm.get("subscription_pack_period") or 1
+
+
+def normalize_vehicle_size(elm):
+    if elm.get("size") == "sub":
+        return "suv"
+    return elm.get("size")

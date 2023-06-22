@@ -109,7 +109,7 @@ def serialized_data(elm = mock_query_response):
     'Traction': elm.get('traction'),
     'Number of doors': elm.get('number_of_doors'),
     'Number of seats': elm.get('number_of_seats'),
-    'Size': elm.get('size'),
+    'Size': utils.normalize_vehicle_size(elm),
     'Energy classification': elm.get('energy_classification'),
     'Enviromental label': elm.get('environmental_label'),
     'Accessories': utils.vh_accesories(elm),
