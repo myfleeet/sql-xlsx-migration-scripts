@@ -17,6 +17,7 @@ select
 	va.delivery_at,
 	va.delivery_note,	
 	-- PICK UP 
+	s.started_at,
 	s.cancel_requested_at,
 	va.pick_up_address, -- if !== HUBS type is door-to-door
 	va.pick_up_at,
@@ -27,7 +28,7 @@ select
 	-- SUB
 	pd.base_amount,
 	s.subscription_pack_period,
-  s.periodicity,
+    s.periodicity,
 	s.subscription_pack_price,
 	pd.tax_rate, -- % percentage
 	c2.code,
@@ -77,6 +78,7 @@ mock_query_response = dict(
     tax_rate=0.21,
     duration="",
     periodicity="",
+    started_at="",
 )
 
 
@@ -98,6 +100,7 @@ def serialized_data(elm=mock_query_response):
         "color": elm.get("color"),
         "upholstery": None,
         "VIN": elm.get("vin"),
+        "startedAt": elm.get("started_at"),
         "deliveryType": utils.type_of_delivery(elm.get("delivery_address")),
         "deliveryDate": utils.time_format(elm.get("delivery_at")),
         "DeliveryHour": utils.hours_format(elm.get("delivery_at")),
