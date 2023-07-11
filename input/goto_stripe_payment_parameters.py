@@ -5,6 +5,7 @@ output_file = 'Stripe Payment Parameters'
 query = """
 select 
 	pm.id,
+	c.default_payment_method_id,
 	pm.customer_id,
 	pm.method_id,
 	pm.method_type,
@@ -13,6 +14,7 @@ select
 	pm.document_hint ->> 'brand' as brand,
 	pm.document_hint ->> 'last4' as last4
 from payment_methods pm
+left join clients c on c.id = pm.client_id
 ;
 """
 
@@ -24,8 +26,10 @@ mock_query_response = dict(
   exp_year='2023',
   exp_month='05',
   brand='',
-  last4=''
+  last4='',
+  default_payment_method_id='',
 )
+
 
 def serialized_data(elm = mock_query_response):
   return {
@@ -36,4 +40,5 @@ def serialized_data(elm = mock_query_response):
     'Expiration Date': utils.stripe_payment_expiration_format(elm),
     'Brand / BankCode': elm.get('brand'),
     'Last 4 digits': elm.get('last4'),
+    "is default payment method": "true" if elm.get("default_payment_method_id") == elm.get("id") else None
   }
