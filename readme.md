@@ -21,7 +21,7 @@ make main
 
 - to execute custom queries (it can take up to 10min)
 ```sh
-make custom
+make custom-vh
 ```
 
 - to execute all
