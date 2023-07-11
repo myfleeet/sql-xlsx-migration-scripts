@@ -29,7 +29,7 @@ mock_query_response = dict(
 
 def serialized_data(elm = mock_query_response):
   return {
-    'Astara move uniq ID': elm.get('id'),
+    'Astara move uniq ID CUSTOMER': elm.get('id'),
     'ASTARA MOVE STRIPE ID': elm.get('customer_id'),
     'Name': elm.get('name'),
     'Address': f"{utils.user_address(elm)} {utils.user_address_details(elm)}",

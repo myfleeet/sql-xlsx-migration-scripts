@@ -6,6 +6,7 @@ query = """
 select 
 	pm.id,
 	c.default_payment_method_id,
+  c.id as client_id,
 	pm.customer_id,
 	pm.method_id,
 	pm.method_type,
@@ -28,12 +29,14 @@ mock_query_response = dict(
   brand='',
   last4='',
   default_payment_method_id='',
+  client_id='',
 )
 
 
 def serialized_data(elm = mock_query_response):
   return {
-    'Astara move uniq ID': elm.get('id'),
+    'Astara move uniq ID PAYMENT METHOD': elm.get('id'),
+    'Astara move uniq ID CUSTOMER': elm.get('client_id'),
     'ASTARA MOVE STRIPE ID': elm.get('customer_id'),
     'Stripe Payment Method ID': elm.get('method_id'),
     'Payment Type (Credit/SEPA)': elm.get('method_type'),
